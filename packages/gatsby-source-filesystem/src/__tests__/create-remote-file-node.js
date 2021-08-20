@@ -27,7 +27,7 @@ jest.mock(`../create-file-node`, () => {
     createFileNode: jest.fn(),
   }
 })
-const reporter = require(`gatsby/reporter`)
+const reporter = {}
 
 const got = require(`got`)
 const createRemoteFileNode = require(`../create-remote-file-node`)
@@ -285,6 +285,8 @@ describe(`create-remote-file-node`, () => {
         createRemoteFileNode({
           ...defaultArgs,
           getCache: () => createMockCache(),
+        }).catch(err => {
+          // ignore the url error
         })
       }).not.toThrow()
     })
@@ -294,6 +296,8 @@ describe(`create-remote-file-node`, () => {
         createRemoteFileNode({
           ...defaultArgs,
           cache: createMockCache(),
+        }).catch(err => {
+          // ignore the url error
         })
       }).not.toThrow()
     })
