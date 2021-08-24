@@ -197,6 +197,11 @@ async function sqipContentful({ type, cache, store }) {
           fetchContentfulAsset,
         } = require(`gatsby-source-contentful/fetch-contentful-asset`)
 
+        const { getCacheFolder } = require(`gatsby-source-contentful/config`)
+
+        const CACHE_FOLDER = getCacheFolder({ store })
+        cache.directory = CACHE_FOLDER
+
         const {
           file: { contentType, url: imgUrl, fileName },
         } = asset

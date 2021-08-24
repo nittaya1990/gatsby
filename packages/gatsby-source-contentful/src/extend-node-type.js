@@ -53,7 +53,7 @@ exports.mimeTypeExtensions = mimeTypeExtensions
 const isImage = image => mimeTypeExtensions.has(image?.file?.contentType)
 
 // Note: this may return a Promise<body>, body (sync), or null
-const getBase64Image = (imageProps, reporter, cache, CACHE_FOLDER) => {
+const getBase64Image = (imageProps, reporter, cache) => {
   if (!imageProps) {
     return null
   }
@@ -89,10 +89,7 @@ const getBase64Image = (imageProps, reporter, cache, CACHE_FOLDER) => {
   const loadImageAsBase64 = async () => {
     const filename = await fetchContentfulAsset({
       url: requestUrl,
-      cache: {
-        ...cache,
-        directory: CACHE_FOLDER,
-      },
+      cache,
       reporter,
     })
 
@@ -455,21 +452,14 @@ const resolveResize = (image, options) => {
 
 exports.resolveResize = resolveResize
 
-const fixedNodeType = ({
-  name,
-  getTracedSVG,
-  reporter,
-  cache,
-  CACHE_FOLDER,
-}) => {
+const fixedNodeType = ({ name, getTracedSVG, reporter, cache }) => {
   return {
     type: new GraphQLObjectType({
       name: name,
       fields: {
         base64: {
           type: GraphQLString,
-          resolve: imageProps =>
-            getBase64Image(imageProps, reporter, cache, CACHE_FOLDER),
+          resolve: imageProps => getBase64Image(imageProps, reporter, cache),
         },
         tracedSVG: {
           type: GraphQLString,
@@ -564,21 +554,14 @@ const fixedNodeType = ({
   }
 }
 
-const fluidNodeType = ({
-  name,
-  getTracedSVG,
-  reporter,
-  cache,
-  CACHE_FOLDER,
-}) => {
+const fluidNodeType = ({ name, getTracedSVG, reporter, cache }) => {
   return {
     type: new GraphQLObjectType({
       name: name,
       fields: {
         base64: {
           type: GraphQLString,
-          resolve: imageProps =>
-            getBase64Image(imageProps, reporter, cache, CACHE_FOLDER),
+          resolve: imageProps => getBase64Image(imageProps, reporter, cache),
         },
         tracedSVG: {
           type: GraphQLString,
@@ -680,7 +663,7 @@ exports.extendNodeType = ({ type, cache, reporter, store }) => {
     return {}
   }
 
-  const CACHE_FOLDER = getCacheFolder({ store })
+  cache.directory = getCacheFolder({ store })
 
   const getTracedSVG = async args => {
     const { traceSVG } = require(`gatsby-plugin-sharp`)
@@ -701,10 +684,7 @@ exports.extendNodeType = ({ type, cache, reporter, store }) => {
     const absolutePath = await fetchContentfulAsset({
       url,
       name,
-      cache: {
-        ...cache,
-        directory: CACHE_FOLDER,
-      },
+      cache,
       reporter,
       ext: extension,
     })
@@ -755,10 +735,7 @@ exports.extendNodeType = ({ type, cache, reporter, store }) => {
       const absolutePath = await fetchContentfulAsset({
         url,
         name,
-        cache: {
-          ...cache,
-          directory: CACHE_FOLDER,
-        },
+        cache,
         reporter,
         ext: extension,
       })
@@ -843,7 +820,6 @@ exports.extendNodeType = ({ type, cache, reporter, store }) => {
     getTracedSVG,
     reporter,
     cache,
-    CACHE_FOLDER,
   })
 
   const fluidNode = fluidNodeType({
@@ -851,7 +827,6 @@ exports.extendNodeType = ({ type, cache, reporter, store }) => {
     getTracedSVG,
     reporter,
     cache,
-    CACHE_FOLDER,
   })
 
   // gatsby-plugin-image
