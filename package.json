@@ -113,9 +113,7 @@
   "private": true,
   "resolutions": {
     "theme-ui": "0.4.0-rc.14",
-    "csstype": "2.6.17",
-    "fs-extra": "9.1.0",
-    "fsevents": "1.2.13"
+    "csstype": "2.6.17"
   },
   "scripts": {
     "bootstrap": "npm-run-all -s check-versions \"lerna-prepare -- --{@}\" --",
