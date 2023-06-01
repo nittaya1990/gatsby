@@ -1,5 +1,3 @@
-const { Potrace } = require(`potrace`)
-
 exports.pluginOptionsSchema = function ({ Joi }) {
   return Joi.object({
     maxWidth: Joi.number()
@@ -49,6 +47,12 @@ exports.pluginOptionsSchema = function ({ Joi }) {
       .description(
         `Additionally generate WebP versions alongside your chosen file format. They are added as a srcset with the appropriate mimetype and will be loaded in browsers that support the format. Pass true for default support, or an object of options to specifically override those for the WebP files. For example, pass { quality: 80 } to have the WebP images be at quality level 80.`
       ),
+    withAvif: Joi.alternatives()
+      .try(Joi.object({ quality: Joi.number() }), Joi.boolean())
+      .default(false)
+      .description(
+        `Additionally generate AVIF versions alongside your chosen file format. They are added as a srcset with the appropriate mimetype and will be loaded in browsers that support the format. Pass true for default support, or an object of options to specifically override those for the AVIF files. For example, pass { quality: 80 } to have the AVIF images be at quality level 80.`
+      ),
     tracedSVG: Joi.alternatives()
       .try(
         Joi.boolean(),
@@ -63,30 +67,34 @@ exports.pluginOptionsSchema = function ({ Joi }) {
               `TURNPOLICY_MINORITY`,
               `TURNPOLICY_MAJORITY`,
               // it also allow using actual policy values
-              Potrace.TURNPOLICY_BLACK,
-              Potrace.TURNPOLICY_WHITE,
-              Potrace.TURNPOLICY_LEFT,
-              Potrace.TURNPOLICY_RIGHT,
-              Potrace.TURNPOLICY_MINORITY,
-              Potrace.TURNPOLICY_MAJORITY
+              `black`,
+              `white`,
+              `left`,
+              `right`,
+              `minority`,
+              `majority`
             )
-            .default(Potrace.TURNPOLICY_MAJORITY),
+            .default(`majority`),
           turdSize: Joi.number().default(100),
           alphaMax: Joi.number(),
           optCurve: Joi.boolean().default(true),
           optTolerance: Joi.number().default(0.4),
           threshold: Joi.alternatives()
-            .try(
-              Joi.number().min(0).max(255),
-              Joi.number().valid(Potrace.THRESHOLD_AUTO)
-            )
-            .default(Potrace.THRESHOLD_AUTO),
+            .try(Joi.number().min(0).max(255), Joi.number().valid(-1))
+            .default(-1),
           blackOnWhite: Joi.boolean().default(true),
           color: Joi.string().default(`lightgray`),
           background: Joi.string().default(`transparent`),
         })
       )
-      .default(false)
+      .custom(value => {
+        if (!!value && !process.env.GATSBY_WORKER_ID) {
+          console.warn(
+            `"tracedSVG" plugin option for "gatsby-remark-images" is no longer supported. Blurred placeholder will be used. See https://gatsby.dev/tracesvg-removal/`
+          )
+        }
+        return undefined
+      })
       .description(
         `Use traced SVGs for placeholder images instead of the “blur up” effect. Pass true for traced SVGs with the default settings (seen here), or an object of options to override the default. For example, pass { color: "#F00", turnPolicy: "TURNPOLICY_MAJORITY" } to change the color of the trace to red and the turn policy to TURNPOLICY_MAJORITY. See node-potrace parameter documentation for a full listing and explanation of the available options.`
       ),

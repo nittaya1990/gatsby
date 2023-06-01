@@ -104,6 +104,7 @@ export interface IPluginOptions {
     fallbackImageMaxWidth?: number
     imageQuality?: number
     createStaticFiles?: boolean
+    placeholderType?: `blurred` | `dominantColor`
   }
   presets?: Array<IPluginOptionsPreset>
   type?: {
@@ -123,6 +124,8 @@ export interface IPluginOptions {
         maxFileSizeBytes?: number
         requestConcurrency?: number
       }
+
+      placeholderSizeName?: string
     }
   }
 }
@@ -191,6 +194,8 @@ const defaultPluginOptions: IPluginOptions = {
     //
     // this adds image options to images in HTML fields when html.useGatsbyImage is also set
     gatsbyImageOptions: {},
+
+    placeholderType: `blurred`,
   },
   presets: [previewOptimizationPreset],
   type: {
@@ -226,6 +231,8 @@ const defaultPluginOptions: IPluginOptions = {
       exclude: true,
     },
     MediaItem: {
+      exclude: false,
+      placeholderSizeName: `gatsby-image-placeholder`,
       lazyNodes: false,
       createFileNodes: true,
       localFile: {
@@ -299,36 +306,6 @@ const defaultPluginOptions: IPluginOptions = {
        * When we can get a list of all menu items regardless of location in WPGQL, this can be removed.
        */
       beforeChangeNode: menuBeforeChangeNode,
-    },
-    // the next two types can't be sourced in Gatsby properly yet
-    // @todo instead of excluding these manually, auto exclude them
-    // based on how they behave (no single node query available)
-    EnqueuedScript: {
-      exclude: true,
-    },
-    EnqueuedStylesheet: {
-      exclude: true,
-    },
-    EnqueuedAsset: {
-      exclude: true,
-    },
-    ContentNodeToEnqueuedScriptConnection: {
-      exclude: true,
-    },
-    ContentNodeToEnqueuedStylesheetConnection: {
-      exclude: true,
-    },
-    TermNodeToEnqueuedScriptConnection: {
-      exclude: true,
-    },
-    TermNodeToEnqueuedStylesheetConnection: {
-      exclude: true,
-    },
-    UserToEnqueuedScriptConnection: {
-      exclude: true,
-    },
-    UserToEnqueuedStylesheetConnection: {
-      exclude: true,
     },
   },
 }

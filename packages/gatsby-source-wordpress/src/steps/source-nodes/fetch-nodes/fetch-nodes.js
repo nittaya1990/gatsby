@@ -14,6 +14,8 @@ import {
   setHardCachedNodes,
   setPersistentCache,
 } from "~/utils/cache"
+import { buildTypeName } from "../../create-schema-customization/helpers"
+import { needToTouchNodes } from "../../../utils/gatsby-features"
 
 /**
  * fetchWPGQLContentNodes
@@ -85,7 +87,13 @@ export const getContentTypeQueryInfos = () => {
   return queryInfos
 }
 
+let cachedGatsbyNodeTypeNames = null
+
 export const getGatsbyNodeTypeNames = () => {
+  if (cachedGatsbyNodeTypeNames) {
+    return cachedGatsbyNodeTypeNames
+  }
+
   const { typeMap } = store.getState().remoteSchema
 
   const queryableTypenames = getContentTypeQueryInfos().map(
@@ -108,7 +116,21 @@ export const getGatsbyNodeTypeNames = () => {
     []
   )
 
-  return [...new Set([...queryableTypenames, ...implementingNodeTypes])]
+  const allTypeNames = [
+    ...new Set([...queryableTypenames, ...implementingNodeTypes]),
+  ]
+
+  const allBuiltTypeNames = allTypeNames.map(typename =>
+    buildTypeName(typename)
+  )
+
+  const typeNameList = [...allTypeNames, ...allBuiltTypeNames]
+
+  if (typeNameList.length) {
+    cachedGatsbyNodeTypeNames = typeNameList
+  }
+
+  return typeNameList
 }
 
 /**
@@ -206,7 +228,9 @@ export const fetchAndCreateAllNodes = async () => {
     })
   }
 
-  // save the node id's so we can touch them on the next build
-  // so that we don't have to refetch all nodes
-  await setPersistentCache({ key: CREATED_NODE_IDS, value: createdNodeIds })
+  if (needToTouchNodes) {
+    // save the node id's so we can touch them on the next build
+    // so that we don't have to refetch all nodes
+    await setPersistentCache({ key: CREATED_NODE_IDS, value: createdNodeIds })
+  }
 }

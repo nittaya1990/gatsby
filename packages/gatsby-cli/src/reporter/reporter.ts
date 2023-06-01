@@ -1,13 +1,16 @@
 import { stripIndent } from "common-tags"
 import chalk from "chalk"
 import { trackError } from "gatsby-telemetry"
-import { globalTracer, Span } from "opentracing"
+import { globalTracer, Span, SpanContext } from "opentracing"
 
 import * as reduxReporterActions from "./redux/actions"
 import { LogLevels, ActivityStatuses } from "./constants"
 import { getErrorFormatter } from "./errors"
 import constructError from "../structured-errors/construct-error"
-import { IErrorMapEntry, ErrorId } from "../structured-errors/error-map"
+import {
+  IErrorMapEntryPublicApi,
+  ErrorId,
+} from "../structured-errors/error-map"
 import { prematureEnd } from "./catch-exit-signals"
 import { IConstructError, IStructuredError } from "../structured-errors/types"
 import { createTimerReporter, ITimerReporter } from "./reporter-timer"
@@ -19,6 +22,11 @@ import {
   ILogIntent,
   IRenderPageArgs,
 } from "./types"
+import {
+  registerAdditionalDiagnosticOutputHandler,
+  AdditionalDiagnosticsOutputHandler,
+} from "./redux/diagnostics"
+import { isTruthy } from "gatsby-core-utils/is-truthy"
 
 const errorFormatter = getErrorFormatter()
 const tracer = globalTracer()
@@ -27,11 +35,12 @@ let reporterActions = reduxReporterActions
 
 export interface IActivityArgs {
   id?: string
-  parentSpan?: Span
+  parentSpan?: Span | SpanContext
   tags?: { [key: string]: any }
 }
 
-let isVerbose = false
+// eslint-disable-next-line prefer-const
+let isVerbose = isTruthy(process.env.GATSBY_REPORTER_ISVERBOSE)
 
 function isLogIntentMessage(msg: any): msg is ILogIntent {
   return msg && msg.type === `LOG_INTENT`
@@ -48,7 +57,7 @@ class Reporter {
   stripIndent = stripIndent
   format = chalk
 
-  errorMap: Record<ErrorId, IErrorMapEntry> = {}
+  errorMap: Record<ErrorId, IErrorMapEntryPublicApi> = {}
 
   /**
    * Set a custom error map to the reporter. This allows
@@ -58,7 +67,7 @@ class Reporter {
    * https://github.com/gatsbyjs/gatsby/blob/master/packages/gatsby-cli/src/structured-errors/error-map.ts
    */
 
-  setErrorMap = (entry: Record<string, IErrorMapEntry>): void => {
+  setErrorMap = (entry: Record<string, IErrorMapEntryPublicApi>): void => {
     this.errorMap = {
       ...this.errorMap,
       ...entry,
@@ -70,6 +79,7 @@ class Reporter {
    */
   setVerbose = (_isVerbose: boolean = true): void => {
     isVerbose = _isVerbose
+    process.env.GATSBY_REPORTER_ISVERBOSE = isVerbose ? `1` : `0`
   }
 
   /**
@@ -234,7 +244,8 @@ class Reporter {
    */
   activityTimer = (
     text: string,
-    activityArgs: IActivityArgs = {}
+    activityArgs: IActivityArgs = {},
+    pluginName?: string
   ): ITimerReporter => {
     let { parentSpan, id, tags } = activityArgs
     const spanArgs = parentSpan ? { childOf: parentSpan, tags } : { tags }
@@ -250,6 +261,7 @@ class Reporter {
       span,
       reporter: this,
       reporterActions,
+      pluginName,
     })
   }
 
@@ -285,7 +297,8 @@ class Reporter {
     text: string,
     total = 0,
     start = 0,
-    activityArgs: IActivityArgs = {}
+    activityArgs: IActivityArgs = {},
+    pluginName?: string
   ): IProgressReporter => {
     let { parentSpan, id, tags } = activityArgs
     const spanArgs = parentSpan ? { childOf: parentSpan, tags } : { tags }
@@ -302,6 +315,7 @@ class Reporter {
       span,
       reporter: this,
       reporterActions,
+      pluginName,
     })
   }
 
@@ -350,6 +364,12 @@ class Reporter {
 
   _renderPageTree(args: IRenderPageArgs): void {
     reporterActions.renderPageTree(args)
+  }
+
+  _registerAdditionalDiagnosticOutputHandler(
+    handler: AdditionalDiagnosticsOutputHandler
+  ): void {
+    registerAdditionalDiagnosticOutputHandler(handler)
   }
 }
 export type { Reporter }

@@ -35,6 +35,13 @@ jest.mock(`fs-extra`, () => {
   }
 })
 
+jest.mock(`gatsby-telemetry`, () => {
+  return {
+    trackCli: () => {},
+    captureEvent: () => {},
+  }
+})
+
 jest.mock(`../../utils/cache-lmdb`, () => {
   return {
     default: class MockedCache {
@@ -44,6 +51,7 @@ jest.mock(`../../utils/cache-lmdb`, () => {
       get = jest.fn(() => Promise.resolve())
       set = jest.fn(() => Promise.resolve())
     },
+    __esModule: true,
   }
 })
 
@@ -59,6 +67,13 @@ jest.mock(`gatsby-cli/lib/reporter`, () => {
       return {
         start: jest.fn(),
         setStatus: jest.fn(),
+        end: jest.fn(),
+      }
+    },
+    createProgress: () => {
+      return {
+        start: jest.fn(),
+        tick: jest.fn(),
         end: jest.fn(),
       }
     },
@@ -273,6 +288,8 @@ const setup = async ({ restart = isFirstRun, clearCache = false } = {}) => {
   }
 }
 
+const indexBarFooArray = [`/`, `/bar/`, `/foo/`]
+
 describe(`query caching between builds`, () => {
   beforeAll(() => {
     setAPIhooks({
@@ -368,10 +385,10 @@ describe(`query caching between builds`, () => {
         await setup()
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
       // on initial we want all queries to run
-      expect(pathsOfPagesWithQueriesThatRan).toEqual([`/`, `/bar`, `/foo`])
+      expect(pathsOfPagesWithQueriesThatRan).toEqual(indexBarFooArray)
       expect(staticQueriesThatRan).toEqual([`static-query-1`])
     }, 99999)
 
@@ -380,7 +397,7 @@ describe(`query caching between builds`, () => {
         await setup()
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
       // no changes should mean no queries to run
       expect(pathsOfPagesWithQueriesThatRan).toEqual([])
@@ -394,7 +411,7 @@ describe(`query caching between builds`, () => {
         })
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
       // no changes should mean no queries to run
       expect(pathsOfPagesWithQueriesThatRan).toEqual([])
@@ -409,10 +426,10 @@ describe(`query caching between builds`, () => {
         })
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
       // on initial we want all queries to run
-      expect(pathsOfPagesWithQueriesThatRan).toEqual([`/`, `/bar`, `/foo`])
+      expect(pathsOfPagesWithQueriesThatRan).toEqual(indexBarFooArray)
       expect(staticQueriesThatRan).toEqual([`static-query-1`])
     }, 99999)
   })
@@ -458,10 +475,10 @@ describe(`query caching between builds`, () => {
         })
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
       // on initial we want all queries to run
-      expect(pathsOfPagesWithQueriesThatRan).toEqual([`/`, `/bar`, `/foo`])
+      expect(pathsOfPagesWithQueriesThatRan).toEqual(indexBarFooArray)
       expect(staticQueriesThatRan).toEqual([`static-query-1`])
     }, 99999)
 
@@ -470,7 +487,7 @@ describe(`query caching between builds`, () => {
         await setup()
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
       // it should not rerun any page query
       expect(pathsOfPagesWithQueriesThatRan).toEqual([])
@@ -484,7 +501,7 @@ describe(`query caching between builds`, () => {
         })
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
       // it should not rerun any page query
       expect(pathsOfPagesWithQueriesThatRan).toEqual([])
@@ -533,10 +550,10 @@ describe(`query caching between builds`, () => {
         })
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
       // on initial we want all queries to run
-      expect(pathsOfPagesWithQueriesThatRan).toEqual([`/`, `/bar`, `/foo`])
+      expect(pathsOfPagesWithQueriesThatRan).toEqual(indexBarFooArray)
       expect(staticQueriesThatRan).toEqual([`static-query-1`])
     }, 99999)
 
@@ -545,10 +562,10 @@ describe(`query caching between builds`, () => {
         await setup()
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
-      // we changed one node, so connection (`/`) and one detail page (`/bar`) should run
-      expect(pathsOfPagesWithQueriesThatRan).toEqual([`/`, `/bar`])
+      // we changed one node, so connection (`/`) and one detail page (`/bar/`) should run
+      expect(pathsOfPagesWithQueriesThatRan).toEqual([`/`, `/bar/`])
       expect(staticQueriesThatRan).toEqual([])
     }, 999999)
 
@@ -559,10 +576,10 @@ describe(`query caching between builds`, () => {
         })
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
-      // we changed one node, so connection (`/`) and one detail page (`/bar`) should run
-      expect(pathsOfPagesWithQueriesThatRan).toEqual([`/`, `/bar`])
+      // we changed one node, so connection (`/`) and one detail page (`/bar/`) should run
+      expect(pathsOfPagesWithQueriesThatRan).toEqual([`/`, `/bar/`])
       expect(staticQueriesThatRan).toEqual([])
     }, 999999)
   })
@@ -611,10 +628,10 @@ describe(`query caching between builds`, () => {
         })
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
       // on initial we want all queries to run
-      expect(pathsOfPagesWithQueriesThatRan).toEqual([`/`, `/bar`, `/foo`])
+      expect(pathsOfPagesWithQueriesThatRan).toEqual(indexBarFooArray)
       expect(staticQueriesThatRan).toEqual([`static-query-1`])
     }, 99999)
 
@@ -623,7 +640,7 @@ describe(`query caching between builds`, () => {
         await setup()
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
       // no queries should run
       expect(pathsOfPagesWithQueriesThatRan).toEqual([])
@@ -637,7 +654,7 @@ describe(`query caching between builds`, () => {
         })
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/`, `/bar`, `/foo`])
+      expect(pages).toEqual(indexBarFooArray)
 
       // no queries should run
       expect(pathsOfPagesWithQueriesThatRan).toEqual([])
@@ -1249,10 +1266,10 @@ describe(`query caching between builds`, () => {
         })
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/no-dep-page`])
+      expect(pages).toEqual([`/no-dep-page/`])
 
       // on initial we want all queries to run
-      expect(pathsOfPagesWithQueriesThatRan).toEqual([`/no-dep-page`])
+      expect(pathsOfPagesWithQueriesThatRan).toEqual([`/no-dep-page/`])
       expect(staticQueriesThatRan).toEqual([])
     }, 99999)
 
@@ -1261,7 +1278,7 @@ describe(`query caching between builds`, () => {
         await setup()
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/no-dep-page`])
+      expect(pages).toEqual([`/no-dep-page/`])
 
       // no queries should run
       expect(pathsOfPagesWithQueriesThatRan).toEqual([])
@@ -1275,7 +1292,7 @@ describe(`query caching between builds`, () => {
         })
 
       // sanity check, to make sure test setup is correct
-      expect(pages).toEqual([`/no-dep-page`])
+      expect(pages).toEqual([`/no-dep-page/`])
 
       // no queries should run
       // Currently it actually re-run query for `/no-dep-page`
@@ -1330,8 +1347,12 @@ describe(`query caching between builds`, () => {
                 },
                 barList: {
                   type: [`Bar`],
-                  resolve: (value, args, context) =>
-                    context.nodeModel.getAllNodes({ type: `Bar` }),
+                  resolve: async (value, args, context) => {
+                    const { entries } = await context.nodeModel.findAll({
+                      type: `Bar`,
+                    })
+                    return entries
+                  },
                 },
               },
               interfaces: [`Node`],
@@ -1439,14 +1460,14 @@ describe(`query caching between builds`, () => {
           clearCache: true,
         })
         // sanity check, to make sure test setup is correct
-        expect(pages).toEqual([`/bar`, `/bar-list`, `/foo`, `/foo-list`])
+        expect(pages).toEqual([`/bar-list/`, `/bar/`, `/foo-list/`, `/foo/`])
 
         // on initial we want query to run
         expect(pathsOfPagesWithQueriesThatRan).toEqual([
-          `/bar`,
-          `/bar-list`,
-          `/foo`,
-          `/foo-list`,
+          `/bar-list/`,
+          `/bar/`,
+          `/foo-list/`,
+          `/foo/`,
         ])
       }, 999999)
 
@@ -1458,7 +1479,7 @@ describe(`query caching between builds`, () => {
 
         // Since there was no single "foo" node before - we will also re-run the "/foo"
         // (as maybe the new node matches this query now)
-        expect(pathsOfPagesWithQueriesThatRan).toEqual([`/foo`, `/foo-list`])
+        expect(pathsOfPagesWithQueriesThatRan).toEqual([`/foo-list/`, `/foo/`])
       }, 999999)
 
       it(`re-runs queries when a foo node is deleted`, async () => {
@@ -1467,7 +1488,7 @@ describe(`query caching between builds`, () => {
           restart: withRestarts,
         })
 
-        expect(pathsOfPagesWithQueriesThatRan).toEqual([`/foo`, `/foo-list`])
+        expect(pathsOfPagesWithQueriesThatRan).toEqual([`/foo-list/`, `/foo/`])
       }, 999999)
 
       it(`re-runs queries when a bar-2 node is added`, async () => {
@@ -1481,7 +1502,7 @@ describe(`query caching between builds`, () => {
         // FIXME: this can be actually wrong behavior when filtering by any field other than "id"
         //   we should rework this to use connection + filter for tracking.
         //   In this case this test will also re-run "/bar" query (also affects other bar-related tests)
-        expect(pathsOfPagesWithQueriesThatRan).toEqual([`/bar-list`])
+        expect(pathsOfPagesWithQueriesThatRan).toEqual([`/bar-list/`])
       }, 999999)
 
       it(`re-runs queries when a bar-2 node is deleted`, async () => {
@@ -1490,7 +1511,7 @@ describe(`query caching between builds`, () => {
           restart: withRestarts,
         })
 
-        expect(pathsOfPagesWithQueriesThatRan).toEqual([`/bar-list`])
+        expect(pathsOfPagesWithQueriesThatRan).toEqual([`/bar-list/`])
       }, 999999)
 
       it(`re-runs queries when a bar-1 node is deleted`, async () => {
@@ -1499,7 +1520,7 @@ describe(`query caching between builds`, () => {
           restart: withRestarts,
         })
 
-        expect(pathsOfPagesWithQueriesThatRan).toEqual([`/bar`, `/bar-list`])
+        expect(pathsOfPagesWithQueriesThatRan).toEqual([`/bar-list/`, `/bar/`])
       }, 999999)
     }
 

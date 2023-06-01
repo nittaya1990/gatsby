@@ -1,6 +1,6 @@
 // @ts-check
 import { createRemoteFileNode } from "gatsby-source-filesystem"
-import { createUrl } from "./extend-node-type"
+import { createUrl } from "./image-helpers"
 
 /**
  * @name distributeWorkload
@@ -29,20 +29,19 @@ async function distributeWorkload(workers, count = 50) {
 
 export async function downloadContentfulAssets(gatsbyFunctions) {
   const {
-    actions: { createNode, touchNode },
+    actions: { createNode, touchNode, createNodeField },
     createNodeId,
     store,
     cache,
-    getNodesByType,
     reporter,
     assetDownloadWorkers,
     getNode,
+    assetNodes,
   } = gatsbyFunctions
 
   // Any ContentfulAsset nodes will be downloaded, cached and copied to public/static
   // regardless of if you use `localFile` to link an asset or not.
 
-  const assetNodes = getNodesByType(`ContentfulAsset`)
   const bar = reporter.createProgress(
     `Downloading Contentful Assets`,
     assetNodes.length
@@ -79,11 +78,9 @@ export async function downloadContentfulAssets(gatsbyFunctions) {
       if (!fileNodeID) {
         const fileNode = await createRemoteFileNode({
           url,
-          store,
           cache,
           createNode,
           createNodeId,
-          reporter,
         })
 
         if (fileNode) {
@@ -95,7 +92,7 @@ export async function downloadContentfulAssets(gatsbyFunctions) {
       }
 
       if (fileNodeID) {
-        node.localFile___NODE = fileNodeID
+        createNodeField({ node, name: `localFile`, value: fileNodeID })
       }
 
       return node

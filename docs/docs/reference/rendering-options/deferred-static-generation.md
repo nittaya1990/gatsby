@@ -2,14 +2,34 @@
 title: Deferred Static Generation API
 ---
 
-> **Note:** This feature requires running NodeJS server.
-> It is currently fully supported with [`gatsby serve`](/docs/reference/gatsby-cli/#serve) and in [Gatsby Cloud](/products/cloud/).
-
 Deferred Static Generation (DSG) allows you to defer non-critical page generation to the first user request, speeding up build times.
 Instead of generating _every_ page up front, you can decide to generate certain pages at build time and others only when a user accesses the page for the first time.
 Subsequent page requests use the same HTML and JSON generated during the very first request to this page.
 
+> **Note:** This feature requires running NodeJS server.
+> It is currently fully supported with [`gatsby serve`](/docs/reference/gatsby-cli/#serve) and in [Gatsby Cloud](/products/cloud/).
+
 ## Creating deferred pages
+
+### `config`
+
+Inside [File System Route API](/docs/reference/routing/file-system-route-api/) templates you can export an async function called `config` that returns an object with the key `defer`:
+
+```js
+export async function config() {
+  // Optionally use GraphQL here
+
+  return ({ params }) => {
+    return {
+      defer: true,
+    }
+  }
+}
+```
+
+Read the [Deferred Static Generation guide](/docs/how-to/rendering-options/using-deferred-static-generation/) to see a real-world example.
+
+### `createPage`
 
 Creating deferred pages is almost identical to [creating regular pages](/docs/reference/routing/creating-routes/#using-gatsby-nodejs).
 The only difference is the new `defer` argument for [`createPage` action](/docs/reference/config-files/actions/#createPage).
@@ -50,6 +70,30 @@ The first request against a deferred page is a cache miss because the HTML/JSON 
 When you directly visit a page you'll get served the HTML. If you request a page on client-side navigation through Gatsby's Link component the response will be JSON. Gatsby's router uses this to render the page on the client. In the background, the JSON is stored and the HTML is generated so that on a second request of the page (including a direct visit) the page can be served from the CDN.
 
 This all happens automatically and you only need to configure the `defer` key.
+
+## Current limitations
+
+There are some limitations currently that you need to be aware of. We'll do our best to mitigate them in our code, through contributions to upstream dependencies, and updates to our documentation.
+
+### Functions inside `gatsby-config` are not allowed
+
+The `gatsby-config` file is bundled into the DSG engine and for this the file has to be serializable. Functions or callbacks can't be used as they are not serializable.
+
+```js:title=gatsby-config.js
+module.exports = {
+  plugins: [
+    {
+      resolve: `gatsby-plugin-acme`,
+      options: {
+        // ⚠️ Doesn't work
+        optionA: () => `foobar`,
+        // OK
+        optionB: `foobar`
+      }
+    }
+  ]
+}
+```
 
 ## Additional Resources
 

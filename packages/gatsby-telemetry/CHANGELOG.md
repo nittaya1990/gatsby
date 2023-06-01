@@ -3,6 +3,354 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@4.10.0/packages/gatsby-telemetry) (2023-05-16)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v5.10)
+
+#### Chores
+
+- update dependency rimraf to v5 for gatsby-telemetry [#38041](https://github.com/gatsbyjs/gatsby/issues/38041) ([c3e6a79](https://github.com/gatsbyjs/gatsby/commit/c3e6a7986600f09e1bf6bec558b950f57fd44f4a))
+
+## [4.9.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@4.9.0/packages/gatsby-telemetry) (2023-04-18)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v5.9)
+
+#### Bug Fixes
+
+- update dependency node-fetch to ^2.6.9 for gatsby-telemetry [#37833](https://github.com/gatsbyjs/gatsby/issues/37833) ([5f04821](https://github.com/gatsbyjs/gatsby/commit/5f0482164e3aea7de0a9a0c40f44555d16402e9f))
+- update dependency fs-extra to ^11.1.1 [#37827](https://github.com/gatsbyjs/gatsby/issues/37827) ([3e9a590](https://github.com/gatsbyjs/gatsby/commit/3e9a590fdc0b4cdbc763b6a6e3ca3e983ac8231a))
+- update typescript to v5 (major) [#37906](https://github.com/gatsbyjs/gatsby/issues/37906) ([3859ba6](https://github.com/gatsbyjs/gatsby/commit/3859ba6ce629e658525f858a8799b08c34c3eda5))
+
+#### Chores
+
+- update typescript [#37848](https://github.com/gatsbyjs/gatsby/issues/37848) ([9f92796](https://github.com/gatsbyjs/gatsby/commit/9f92796070b0e73fa92089af93de376c9be9021e))
+- update dependency rimraf to v4 for gatsby-telemetry [#37900](https://github.com/gatsbyjs/gatsby/issues/37900) ([617a3d4](https://github.com/gatsbyjs/gatsby/commit/617a3d4e87c1ec061bc877173b158cdcb64f367d))
+
+## [4.8.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@4.8.0/packages/gatsby-telemetry) (2023-03-21)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v5.8)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [4.7.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@4.7.0/packages/gatsby-telemetry) (2023-02-21)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v5.7)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [4.6.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@4.6.0/packages/gatsby-telemetry) (2023-02-07)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v5.6)
+
+#### Bug Fixes
+
+- update babel monorepo [#37568](https://github.com/gatsbyjs/gatsby/issues/37568) ([13a0a9e](https://github.com/gatsbyjs/gatsby/commit/13a0a9e83dcb015b65dff6b73cdd5dea09c2988f))
+- update dependency node-fetch to ^2.6.8 for gatsby-telemetry [#37577](https://github.com/gatsbyjs/gatsby/issues/37577) ([46b523d](https://github.com/gatsbyjs/gatsby/commit/46b523df90239116607c5b13827609b08a551257))
+
+#### Chores
+
+- update typescript [#37596](https://github.com/gatsbyjs/gatsby/issues/37596) ([4f1d1f2](https://github.com/gatsbyjs/gatsby/commit/4f1d1f260472d7768b57960b1e274c8755ca5a67))
+
+## [4.5.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@4.5.0/packages/gatsby-telemetry) (2023-01-24)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v5.5)
+
+#### Chores
+
+- Upgrade some non-breaking major versions [#37406](https://github.com/gatsbyjs/gatsby/issues/37406) ([2ea80c0](https://github.com/gatsbyjs/gatsby/commit/2ea80c02e464fe9306f6a1eccbb6c74983a76208))
+
+## [4.4.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@4.4.0/packages/gatsby-telemetry) (2023-01-10)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v5.4)
+
+#### Chores
+
+- update babel monorepo [#37386](https://github.com/gatsbyjs/gatsby/issues/37386) ([b941876](https://github.com/gatsbyjs/gatsby/commit/b94187633d94d0f0071b38ffe93380dd802ec70f))
+
+### [4.3.1](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@4.3.1/packages/gatsby-telemetry) (2022-12-14)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [4.3.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@4.3.0/packages/gatsby-telemetry) (2022-12-13)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v5.3)
+
+#### Chores
+
+- update dependency typescript to ^4.9.3 [#37192](https://github.com/gatsbyjs/gatsby/issues/37192) ([204ed0e](https://github.com/gatsbyjs/gatsby/commit/204ed0e220eb9c1c5cdec692e82bce8e3e82e915))
+
+## [4.2.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@4.2.0/packages/gatsby-telemetry) (2022-11-25)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v5.2)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [4.1.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@4.1.0/packages/gatsby-telemetry) (2022-11-22)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v5.1)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [4.0.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@4.0.0/packages/gatsby-telemetry) (2022-11-08)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v5.0)
+
+#### Chores
+
+- apply patches for v5 [#36796](https://github.com/gatsbyjs/gatsby/issues/36796) ([25f79b6](https://github.com/gatsbyjs/gatsby/commit/25f79b6c3719fdf09584ade620a05c66ba2a697c))
+
+## [3.24.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.24.0/packages/gatsby-telemetry) (2022-09-27)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.24)
+
+#### Chores
+
+- Bump git-up to v7 [#36652](https://github.com/gatsbyjs/gatsby/issues/36652) ([281590c](https://github.com/gatsbyjs/gatsby/commit/281590cdea3a1987253df44551b38fa125f5d329))
+
+## [3.23.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.23.0/packages/gatsby-telemetry) (2022-09-13)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.23)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.22.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.22.0/packages/gatsby-telemetry) (2022-08-30)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.22)
+
+#### Chores
+
+- Remove unused deps [#36368](https://github.com/gatsbyjs/gatsby/issues/36368) ([8bad1a7](https://github.com/gatsbyjs/gatsby/commit/8bad1a7a612c121fd4c8965c76cf7a0d87fbc3fa))
+
+## [3.21.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.21.0/packages/gatsby-telemetry) (2022-08-16)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.21)
+
+#### Chores
+
+- upgrade git-up [#36358](https://github.com/gatsbyjs/gatsby/issues/36358) ([f2f0acf](https://github.com/gatsbyjs/gatsby/commit/f2f0acf0f8c40312a4ba7988ffa5265eb892e9d2))
+
+## [3.20.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.20.0/packages/gatsby-telemetry) (2022-08-02)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.20)
+
+#### Chores
+
+- update dependency typescript to ^4.7.4 [#36030](https://github.com/gatsbyjs/gatsby/issues/36030) ([94a3264](https://github.com/gatsbyjs/gatsby/commit/94a32647a8c45de620d2efe99310805910586c8a))
+
+## [3.19.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.19.0/packages/gatsby-telemetry) (2022-07-19)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.19)
+
+#### Chores
+
+- Update READMEs for better instructions ([0890a5c](https://github.com/gatsbyjs/gatsby/commit/0890a5cf2c881b49193113a1e1bd5fe13a2c328f))
+
+### [3.18.1](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.18.1/packages/gatsby-telemetry) (2022-07-12)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.18.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.18.0/packages/gatsby-telemetry) (2022-07-05)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.18)
+
+#### Bug Fixes
+
+- update dependency @turist/fetch to ^7.2.0 for gatsby-telemetry [#34986](https://github.com/gatsbyjs/gatsby/issues/34986) ([0767994](https://github.com/gatsbyjs/gatsby/commit/076799482a84acb25a717e7b356261edff43a5ad))
+
+## [3.17.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.17.0/packages/gatsby-telemetry) (2022-06-21)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.17)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.16.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.16.0/packages/gatsby-telemetry) (2022-06-07)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.16)
+
+#### Chores
+
+- update dependency typescript to ^4.7.2 [#35808](https://github.com/gatsbyjs/gatsby/issues/35808) ([2c55b79](https://github.com/gatsbyjs/gatsby/commit/2c55b794dd95b40a994f56df5f912219771ccab4))
+
+## [3.15.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.15.0/packages/gatsby-telemetry) (2022-05-24)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.15)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.14.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.14.0/packages/gatsby-telemetry) (2022-05-10)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.14)
+
+#### Bug Fixes
+
+- update dependency fs-extra to ^10.1.0 [#34976](https://github.com/gatsbyjs/gatsby/issues/34976) ([10752ed](https://github.com/gatsbyjs/gatsby/commit/10752ed325ac0ebc2655b994862f66abe072e09f))
+
+#### Chores
+
+- update dependency typescript to ^4.6.4 [#34984](https://github.com/gatsbyjs/gatsby/issues/34984) ([71eb414](https://github.com/gatsbyjs/gatsby/commit/71eb414ad5abf1c835a2c243f01ac98ea5ee7e37))
+
+## [3.13.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.13.0/packages/gatsby-telemetry) (2022-04-26)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.13)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+### [3.12.1](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.12.1/packages/gatsby-telemetry) (2022-04-13)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.12.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.12.0/packages/gatsby-telemetry) (2022-04-12)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.12)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+### [3.11.1](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.11.1/packages/gatsby-telemetry) (2022-03-31)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.11.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.11.0/packages/gatsby-telemetry) (2022-03-29)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.11)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+### [3.10.1](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.10.1/packages/gatsby-telemetry) (2022-03-23)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.10.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.10.0/packages/gatsby-telemetry) (2022-03-16)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.10)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+### [3.9.1](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.9.1/packages/gatsby-telemetry) (2022-03-09)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.9.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.9.0/packages/gatsby-telemetry) (2022-03-01)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.9)
+
+#### Chores
+
+- Format changelog files ([088f23b](https://github.com/gatsbyjs/gatsby/commit/088f23b084b67f746a383e06e9216cef83270317))
+
+### [3.8.2](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.8.2/packages/gatsby-telemetry) (2022-03-01)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+### [3.8.1](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.8.1/packages/gatsby-telemetry) (2022-02-25)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.8.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.8.0/packages/gatsby-telemetry) (2022-02-22)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.8)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.7.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.7.0/packages/gatsby-telemetry) (2022-02-08)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.7)
+
+#### Bug Fixes
+
+- update dependency node-fetch to ^2.6.7 for gatsby-telemetry [#34651](https://github.com/gatsbyjs/gatsby/issues/34651) ([59d9d9f](https://github.com/gatsbyjs/gatsby/commit/59d9d9f7281d663dca552fa14cf1030b6ec9c024))
+
+#### Chores
+
+- update dependency typescript to ^4.5.5 [#34641](https://github.com/gatsbyjs/gatsby/issues/34641) ([f7a7e1f](https://github.com/gatsbyjs/gatsby/commit/f7a7e1f642d91babb397156ab37cb28dcde19737))
+
+## [3.6.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.6.0/packages/gatsby-telemetry) (2022-01-25)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.6)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+### [3.5.2](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.5.2/packages/gatsby-telemetry) (2022-01-17)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+### [3.5.1](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.5.1/packages/gatsby-telemetry) (2022-01-12)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.5.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.5.0/packages/gatsby-telemetry) (2022-01-11)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.5)
+
+#### Chores
+
+- update dependency typescript to ^4.5.4 [#34358](https://github.com/gatsbyjs/gatsby/issues/34358) ([c6e4298](https://github.com/gatsbyjs/gatsby/commit/c6e42985a20d6b148442aa5f7af1880fa600780b))
+- upgrade jest [#33277](https://github.com/gatsbyjs/gatsby/issues/33277) ([34cb202](https://github.com/gatsbyjs/gatsby/commit/34cb202d9c8c202f082edb03c4cc1815eb81abe1))
+
+## [3.4.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.4.0/packages/gatsby-telemetry) (2021-12-14)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.4)
+
+#### Chores
+
+- update dependency typescript to ^4.5.2 [#34144](https://github.com/gatsbyjs/gatsby/issues/34144) ([51bff91](https://github.com/gatsbyjs/gatsby/commit/51bff91246cbc48ba50c9650205b0488691fb82a))
+
+## [3.3.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.3.0/packages/gatsby-telemetry) (2021-12-01)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.3)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.2.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.2.0/packages/gatsby-telemetry) (2021-11-16)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.2)
+
+#### Bug Fixes
+
+- update dependency node-fetch to ^2.6.6 for gatsby-telemetry [#33765](https://github.com/gatsbyjs/gatsby/issues/33765) ([18a623e](https://github.com/gatsbyjs/gatsby/commit/18a623ebb4520176c349b22297c43f5a1bc5b073))
+
+#### Chores
+
+- update dependency typescript to ^4.4.4 [#33757](https://github.com/gatsbyjs/gatsby/issues/33757) ([7743561](https://github.com/gatsbyjs/gatsby/commit/7743561bbbe0a621d22030fecbba97dfc3e566d1))
+
+### [3.1.3](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.1.3/packages/gatsby-telemetry) (2021-11-15)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+### [3.1.2](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.1.2/packages/gatsby-telemetry) (2021-11-11)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+### [3.1.1](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.1.1/packages/gatsby-telemetry) (2021-11-10)
+
+**Note:** Version bump only for package gatsby-telemetry
+
+## [3.1.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.1.0/packages/gatsby-telemetry) (2021-11-02)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.1)
+
+#### Bug Fixes
+
+- update dependency node-fetch to ^2.6.5 for gatsby-telemetry [#33363](https://github.com/gatsbyjs/gatsby/issues/33363) ([52bfb14](https://github.com/gatsbyjs/gatsby/commit/52bfb149ab1828cf2082e92d487c29c9fdbd2ff7))
+
+## [3.0.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@3.0.0/packages/gatsby-telemetry) (2021-10-21)
+
+[🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v4.0)
+
+#### Features
+
+- capture number of ssg,dsg,ssr pages in telemetry [#33337](https://github.com/gatsbyjs/gatsby/issues/33337) ([7d66a23](https://github.com/gatsbyjs/gatsby/commit/7d66a23cb811189060c44a5296e9e89c19e67128))
+- move away from old default uuid [#33275](https://github.com/gatsbyjs/gatsby/issues/33275) ([325fdf4](https://github.com/gatsbyjs/gatsby/commit/325fdf4a068acf755ed124cb522e133ea5c31157))
+
+#### Bug Fixes
+
+- update typescript [#33387](https://github.com/gatsbyjs/gatsby/issues/33387) ([f2a8035](https://github.com/gatsbyjs/gatsby/commit/f2a8035644e650487abbca8b74a98b96c32d9cd2))
+- update typescript [#33001](https://github.com/gatsbyjs/gatsby/issues/33001) ([6cd70f6](https://github.com/gatsbyjs/gatsby/commit/6cd70f62ecae4aeee8ece38866661be9239062cb))
+
+#### Chores
+
+- remove deps that are global [#33270](https://github.com/gatsbyjs/gatsby/issues/33270) ([a960906](https://github.com/gatsbyjs/gatsby/commit/a96090690b479e7e042544ec18eec39d81ed4c96))
+- apply patches for v4 [#33170](https://github.com/gatsbyjs/gatsby/issues/33170) ([f8c5141](https://github.com/gatsbyjs/gatsby/commit/f8c5141bf72108a53338fd01514522ae7a1b37bf))
+
 ## [2.14.0](https://github.com/gatsbyjs/gatsby/commits/gatsby-telemetry@2.14.0/packages/gatsby-telemetry) (2021-09-18)
 
 [🧾 Release notes](https://www.gatsbyjs.com/docs/reference/release-notes/v3.14)

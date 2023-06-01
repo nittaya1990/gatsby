@@ -11,8 +11,8 @@ import buildHeadersProgram from "./build-headers-program"
 import copyFunctionsManifest from "./copy-functions-manifest"
 import createRedirects from "./create-redirects"
 import createSiteConfig from "./create-site-config"
-import { DEFAULT_OPTIONS, BUILD_HTML_STAGE, BUILD_CSS_STAGE } from "./constants"
-import { emitRoutes, emitFileNodes } from "./ipc"
+import { DEFAULT_OPTIONS, BUILD_HTML_STAGE } from "./constants"
+import { emitRoutes, emitFileNodes, emitTotalRenderedPageCount } from "./ipc"
 
 const assetsManifest = {}
 
@@ -21,7 +21,7 @@ process.env.GATSBY_PREVIEW_INDICATOR_ENABLED =
 
 // Inject a webpack plugin to get the file manifests so we can translate all link headers
 exports.onCreateWebpackConfig = ({ actions, stage }) => {
-  if (stage !== BUILD_HTML_STAGE && stage !== BUILD_CSS_STAGE) {
+  if (stage === BUILD_HTML_STAGE) {
     return
   }
 
@@ -35,15 +35,12 @@ exports.onCreateWebpackConfig = ({ actions, stage }) => {
   })
 }
 
-exports.onPostBuild = async (
-  { store, pathPrefix, getNodesByType },
-  userPluginOptions
-) => {
-  const pluginData = makePluginData(store, assetsManifest, pathPrefix)
-
+exports.onPostBuild = async ({ store }, userPluginOptions) => {
   const pluginOptions = { ...DEFAULT_OPTIONS, ...userPluginOptions }
 
   const { redirects, pageDataStats, nodes, pages } = store.getState()
+
+  const pluginData = makePluginData(store, assetsManifest)
 
   /**
    * Emit via IPC routes for which pages are non SSG
@@ -118,6 +115,7 @@ exports.onPostBuild = async (
     createSiteConfig(pluginData, pluginOptions),
     createRedirects(pluginData, redirects, rewrites),
     copyFunctionsManifest(pluginData),
+    emitTotalRenderedPageCount(pages.size),
   ])
 }
 

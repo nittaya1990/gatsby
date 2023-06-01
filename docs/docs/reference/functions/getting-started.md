@@ -17,9 +17,9 @@ Gatsby Functions help you build [Express-like](https://expressjs.com/) backends 
 
 Functions are generally available in sites running Gatsby 3.7 and above.
 
-## Hello World
+## Introduction
 
-JavaScript and Typescript files in `src/api/*` are mapped to function routes like files in `src/pages/*` become pages. So `src/api` is a reserved directory for Gatsby.
+JavaScript and TypeScript files in `src/api/*` are mapped to function routes like files in `src/pages/*` become pages. So `src/api` is a reserved directory for Gatsby. Gatsby by default ignores test files (e.g. `hello-world.test.js`) and dotfiles (e.g. `.prettierrc.js`).
 
 For example, the following Function is run when you visit the URL `/api/hello-world`
 
@@ -34,6 +34,13 @@ A Function file must export a single function that takes two parameters:
 - `req`: Node's [http request object](https://nodejs.org/api/http.html#http_class_http_incomingmessage) with some [automatically parsed data](/docs/reference/functions/getting-started/#common-data-formats-are-automatically-parsed)
 - `res`: Node's [http response object](https://nodejs.org/api/http.html#http_class_http_serverresponse) with some [extra helper functions](/docs/reference/functions/middleware-and-helpers/#res-helpers)
 
+Dynamic routing is supported for creating REST-ful APIs and other uses cases
+
+- `/api/users` => `src/api/users/index.js`
+- `/api/users/23` => `src/api/users/[id].js`
+
+[Learn more about dynamic routes.](/docs/reference/functions/routing#dynamic-routing)
+
 ## Typescript
 
 Functions can be written in JavaScript or Typescript.
@@ -41,11 +48,15 @@ Functions can be written in JavaScript or Typescript.
 ```ts:title=src/api/typescript.ts
 import { GatsbyFunctionRequest, GatsbyFunctionResponse } from "gatsby"
 
+interface ContactBody {
+  message: string
+}
+
 export default function handler(
-  req: GatsbyFunctionRequest,
+  req: GatsbyFunctionRequest<ContactBody>,
   res: GatsbyFunctionResponse
 ) {
-  res.send(`I am TYPESCRIPT`)
+  res.send({ title: `I am TYPESCRIPT`, message: req.body.message })
 }
 ```
 
@@ -53,7 +64,7 @@ export default function handler(
 
 Query strings and common body content types are automatically parsed and available at `req.query` and `req.body`
 
-Read more about [supported data formats](/docs/reference/functions/middleware-and-helpers).
+Read more about [supported data formats](/docs/reference/functions/middleware-and-helpers) for information about support for Buffer and Stream via a custom `config`.
 
 ```js:title=src/api/contact-form.js
 export default function contactFormHandler(req, res) {
@@ -202,5 +213,5 @@ Shadowing with functions works similar to how shadowing works in general. You ca
 
 ## Limitations
 
-- Gatsby Functions do not support dynamic routes in Gatsby Cloud at the moment
-- Bundling in native dependencies is not supported at the moment
+- Bundling in native dependencies is not supported at the moment.
+- Creating your own custom bundler (webpack/parcel) config is not supported at the moment. You can however pre-bundle by using a "prebuild" `package.json` script command to accomplish custom configuration.

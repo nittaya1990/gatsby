@@ -6,14 +6,12 @@ import { CombinedState } from "redux"
 import { build } from "../../../schema"
 import sourceNodesAndRemoveStaleNodes from "../../source-nodes"
 import { savePartialStateToDisk, store } from "../../../redux"
-import { loadConfigAndPlugins } from "../../../bootstrap/load-config-and-plugins"
-import {
-  createTestWorker,
-  describeWhenLMDB,
-  GatsbyTestWorkerPool,
-} from "./test-helpers"
+import { loadConfig } from "../../../bootstrap/load-config"
+import { loadPlugins } from "../../../bootstrap/load-plugins"
+import { createTestWorker, GatsbyTestWorkerPool } from "./test-helpers"
 import { getDataStore } from "../../../datastore"
 import { IGatsbyState } from "../../../redux/types"
+import { compileGatsbyFiles } from "../../parcel/compile-gatsby-files"
 
 let worker: GatsbyTestWorkerPool | undefined
 
@@ -42,10 +40,11 @@ jest.mock(`gatsby-telemetry`, () => {
     decorateEvent: jest.fn(),
     trackError: jest.fn(),
     trackCli: jest.fn(),
+    isTrackingEnabled: jest.fn(),
   }
 })
 
-describeWhenLMDB(`worker (schema)`, () => {
+describe(`worker (schema)`, () => {
   let stateFromWorker: CombinedState<IGatsbyState>
 
   beforeAll(async () => {
@@ -56,7 +55,11 @@ describeWhenLMDB(`worker (schema)`, () => {
     worker = createTestWorker()
 
     const siteDirectory = path.join(__dirname, `fixtures`, `sample-site`)
-    await loadConfigAndPlugins({ siteDirectory })
+    await compileGatsbyFiles(siteDirectory)
+    const config = await loadConfig({
+      siteDirectory,
+    })
+    await loadPlugins(config, siteDirectory)
     await Promise.all(worker.all.loadConfigAndPlugins({ siteDirectory }))
     await sourceNodesAndRemoveStaleNodes({ webhookBody: {} })
     await getDataStore().ready()
@@ -68,9 +71,9 @@ describeWhenLMDB(`worker (schema)`, () => {
     stateFromWorker = await worker.single.getState()
   })
 
-  afterAll(() => {
+  afterAll(async () => {
     if (worker) {
-      worker.end()
+      await Promise.all(worker.end())
       worker = undefined
     }
     for (const watcher of mockWatchersToClose) {
@@ -139,8 +142,9 @@ describeWhenLMDB(`worker (schema)`, () => {
   })
 
   it(`should have resolverField from createResolvers`, async () => {
-    // @ts-ignore - it exists
-    const { data } = await worker?.single.getRunQueryResult(`
+    if (!worker) fail(`worker not defined`)
+
+    const { data } = await worker.single.getRunQueryResult(`
     {
       one: nodeTypeOne {
         number
@@ -153,15 +157,19 @@ describeWhenLMDB(`worker (schema)`, () => {
       }
     }
   `)
+    if (!data) fail(`data not defined`)
 
+    // @ts-ignore - This is a test
     expect(data.one.number).toBe(123)
     expect(data.two).toBe(null)
+    // @ts-ignore - This is a test
     expect(data.three.resolverField).toBe(`Custom String`)
   })
 
   it(`should have fieldsOnGraphQL from setFieldsOnGraphQLNodeType`, async () => {
-    // @ts-ignore - it exists
-    const { data } = await worker?.single.getRunQueryResult(`
+    if (!worker) fail(`worker not defined`)
+
+    const { data } = await worker.single.getRunQueryResult(`
     {
       four: nodeTypeOne {
         fieldsOnGraphQL
@@ -169,6 +177,7 @@ describeWhenLMDB(`worker (schema)`, () => {
     }
   `)
 
+    // @ts-ignore - This is a test
     expect(data.four.fieldsOnGraphQL).toBe(`Another Custom String`)
   })
 })

@@ -157,6 +157,7 @@ exports.onCreateWebpackConfig = (
             `MiniCssExtractPlugin`,
             `GatsbyWebpackStatsExtractor`,
             `StaticQueryMapper`,
+            `PartialHydrationPlugin`,
           ].find(
             pluginName =>
               plugin.constructor && plugin.constructor.name === pluginName
@@ -170,6 +171,7 @@ exports.onCreateWebpackConfig = (
         new FriendlyErrorsPlugin({
           clearConsole: false,
           compilationSuccessInfo: {
+            // TODO(v5): change proxyPort back in port
             messages: [
               `Netlify CMS is running at ${
                 program.https ? `https://` : `http://`
@@ -212,11 +214,23 @@ exports.onCreateWebpackConfig = (
           ({ name, assetName, sourceMap, assetDir }) =>
             [
               {
-                from: require.resolve(path.join(name, assetDir, assetName)),
+                from: path.join(
+                  path.dirname(
+                    require.resolve(path.join(name, `package.json`))
+                  ),
+                  assetDir,
+                  assetName
+                ),
                 to: assetName,
               },
               sourceMap && {
-                from: require.resolve(path.join(name, assetDir, sourceMap)),
+                from: path.join(
+                  path.dirname(
+                    require.resolve(path.join(name, `package.json`))
+                  ),
+                  assetDir,
+                  sourceMap
+                ),
                 to: sourceMap,
               },
             ].filter(Boolean)

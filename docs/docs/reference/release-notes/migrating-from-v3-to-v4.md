@@ -110,8 +110,8 @@ exports.sourceNodes = ({ actions, getNodesByType }) => {
 In case you only have an ID at hand (e.g. getting it from cache), you can use the `getNode()` API:
 
 ```js:title=gatsby-node.js
-exports.sourceNodes = async ({ actions, getNodesByType, cache }) => {
-  const { touchNode, getNode } = actions
+exports.sourceNodes = async ({ actions, getNode, getNodesByType, cache }) => {
+  const { touchNode } = actions
   const myNodeId = await cache.get("some-key")
 
   touchNode(getNode(myNodeId)) // highlight-line
@@ -252,11 +252,60 @@ The recommended approach is to always create nodes in `sourceNodes`. We are goin
 this workaround that will work using `sourceNodes`. It is still being worked on, please post your use-cases and ideas
 in [this discussion](https://github.com/gatsbyjs/gatsby/discussions/32860#discussioncomment-1262874) to help us shape this new APIs.
 
+If you've used this with `gatsby-source-graphql`, please switch to [Gatsby GraphQL Source Toolkit](https://github.com/gatsbyjs/gatsby-graphql-toolkit). Generally speaking you'll want to create your own source plugin to fully support such use cases.
+
 You can also learn more about this in the [migration guide for source plugins](/docs/reference/release-notes/migrating-source-plugin-from-v3-to-v4/#2-data-mutations-need-to-happen-during-sourcenodes-or-oncreatenode).
 
 ### Changes to built-in types
 
 The built-in type `SitePage` now returns the `pageContext` key as `JSON` and won't infer any other information anymore. The `SitePlugin` type now has two new keys: `pluginOptions: JSON` and `packageJson: JSON`.
+
+#### Field `SitePage.context` is no longer available in GraphQL queries
+
+Before v4 you could query specific fields of the page context object:
+
+```graphql
+{
+  allSitePage {
+    nodes {
+      context {
+        foo
+      }
+    }
+  }
+}
+```
+
+Starting with v4, `context` field is replaced with `pageContext` of type `JSON`.
+It means you can't query individual fields of the context. The new query would look like this:
+
+```graphql
+{
+  allSitePage {
+    nodes {
+      pageContext # returns full JS object passed to `page.context` in `createPages`
+    }
+  }
+}
+```
+
+If you still need to query individual `context` fields - you can workaround it by providing
+a schema for `SitePage.context` manually:
+
+```js
+// Workaround for missing sitePage.context:
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions
+  createTypes(`
+    type SitePage implements Node {
+      context: SitePageContext
+    }
+    type SitePageContext {
+      foo: String
+    }
+  `)
+}
+```
 
 ### Removal of `gatsby-admin`
 
@@ -265,6 +314,10 @@ You can no longer use `gatsby-admin` (activated with environment variable `GATSB
 ### Removal of `process.env.GATSBY_BUILD_STAGE`
 
 This environment variable was internally used by `gatsby-preset-gatsby`. If you're using it you now must pass the `stage` as an option to the preset.
+
+### Windows-specific: No support for WSL1
+
+With the introduction of `lmdb-store` instances running [WSL1](https://docs.microsoft.com/en-us/windows/wsl/about) sadly won't work anymore. You'll see errors like `Error: MDB_BAD_RSLOT: Invalid reuse of reader locktable slot` or similar. This is an [upstream issue](https://github.com/microsoft/WSL/issues/3451) that we can't fix and we recommend updating to WSL2 ([Comparison of WSL1 & WSL2](https://docs.microsoft.com/en-us/windows/wsl/compare-versions)).
 
 ### Gatsby related packages
 
@@ -367,8 +420,45 @@ const count = await totalCount()
 ```
 
 If you don't pass `limit` and `skip`, `findAll` returns all nodes in `{ entries }` iterable.
-Check out the [source code of GatsbyIterable](https://github.com/gatsbyjs/gatsby/blob/master/packages/gatsby/src/datastore/common/iterable.ts)
+Check out the [source code of `GatsbyIterable`](https://github.com/gatsbyjs/gatsby/blob/master/packages/gatsby/src/datastore/common/iterable.ts)
 for usage.
+
+The `GatsbyIterable` has some convenience methods similar to arrays, namely: `concat`, `map`, `filter`, `slice`, `deduplicate`, `forEach`, `mergeSorted`, `intersectSorted`, and `deduplicateSorted`. You can use these instead of first creating an array from `entries` (with `Array.from(entries)`) which should be faster for larger datasets.
+
+Furthermore, you can directly return `entries` in GraphQL resolvers.
+
+```js
+// Example: Directly return `entries`
+resolve: async (source, args, context, info) => {
+  const { entries } = await context.nodeModel.findAll({
+    query: {
+      filter: {
+        frontmatter: {
+          author: { eq: source.email },
+          date: { gt: "2019-01-01" },
+        },
+      },
+    },
+    type: "MarkdownRemark",
+  })
+  return entries
+}
+
+// Example: Use .filter on the iterable
+resolve: async (source, args, context, info) => {
+  const { entries } = await context.nodeModel.findAll({ type: `BlogPost` })
+  return entries.filter(post => post.publishedAt > Date.UTC(2018, 0, 1))
+}
+
+// Example: Convert to array to use methods not available on iterable
+resolve: async (source, args, context, info) => {
+  const { entries } = await context.nodeModel.findAll({
+    type: "MarkdownRemark",
+  })
+  const posts = entries.filter(post => post.frontmatter.author === source.email)
+  return Array.from(posts).length
+}
+```
 
 ### `nodeModel.getAllNodes` is deprecated
 
@@ -462,6 +552,16 @@ If your plugin supports both versions:
 }
 ```
 
+If you defined the `engines` key you'll also need to update the minimum version:
+
+```json:title=package.json
+{
+  "engines": {
+    "node": ">=14.15.0"
+  }
+}
+```
+
 You can also learn more about this in the [migration guide for source plugins](/docs/reference/release-notes/migrating-source-plugin-from-v3-to-v4/).
 
 ### Don't mutate nodes outside of expected APIs
@@ -485,14 +585,15 @@ This was never an intended feature of Gatsby and is considered an anti-pattern (
 Starting with v4 Gatsby introduces a persisted storage for nodes and thus this pattern will no longer work
 because nodes are persisted after `createNode` call and all direct mutations after that will be lost.
 
-Unfortunately it is hard to detect it automatically (without sacrificing performance), so we recommend you to
-check your code to ensure you don't mutate nodes directly.
+Gatsby provides diagnostic mode to detect those direct mutations, unfortunately it has noticeable performance overhead so we don't enable it by default. See [Debugging missing data](/docs/how-to/local-development/debugging-missing-data/) for more details on it.
 
 Gatsby provides several actions available in `sourceNodes` and `onCreateNode` APIs to use instead:
 
 - [createNode](/docs/reference/config-files/actions/#createNode)
 - [deleteNode](/docs/reference/config-files/actions/#deleteNode)
 - [createNodeField](/docs/reference/config-files/actions/#createNodeField)
+
+You can use `createNodeField` and the `@link` directive to create the same schema shape. The [`@link` directive](/docs/reference/graphql-data-layer/schema-customization/#foreign-key-fields) accepts a `from` argument that you can use to place your node to the old position (as `createNodeField` places everything under a `fields` key). See the [source plugin guide](/docs/how-to/plugins-and-themes/creating-a-source-plugin/#create-remote-file-node-from-a-url) for more information. Checkout [this PR](https://github.com/gatsbyjs/gatsby/pull/33715) for a real-world migration example.
 
 ### `___NODE` convention
 
@@ -503,6 +604,14 @@ Please note that the [deprecation of the `___NODE` convention](#___node-conventi
 The current state persistence mechanism supported circular references in nodes. With Gatsby 4 and LMDB this is no longer supported.
 
 This is just a theoretical problem that might arise in v4. Most source plugins already avoid circular dependencies in data.
+
+### Bundling external files
+
+In order for DSG & SSR to work Gatsby creates bundles with all the contents of the site, plugins, and data. When a plugin (or your own `gatsby-node.js`) requires an external file via `fs` module (e.g. `fs.readFile`) the engine won't be able to include the file. As a result you might see an error (when trying to run DSG) like `ENOENT: no such file or directory` in the CLI.
+
+This limitation applies to these lifecycle APIs: `setFieldsOnGraphQLNodeType`, `createSchemaCustomization`, and `createResolvers`.
+
+Instead you should move the contents to a JS/TS file and import the file as this way the bundler will be able to include the contents.
 
 ## Known Issues
 

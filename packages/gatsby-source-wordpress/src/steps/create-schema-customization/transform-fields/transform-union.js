@@ -1,4 +1,5 @@
 import { buildTypeName } from "~/steps/create-schema-customization/helpers"
+import { findNamedTypeName, introspectionFieldTypeToSDL } from "../helpers"
 
 export const transformUnion = ({ field, fieldName }) => {
   return {
@@ -25,10 +26,10 @@ export const transformUnion = ({ field, fieldName }) => {
 }
 
 export const transformListOfUnions = ({ field, fieldName }) => {
-  const typeName = buildTypeName(field.type.ofType.name)
+  const typeSDLString = introspectionFieldTypeToSDL(field.type)
 
   return {
-    type: `[${typeName}]`,
+    type: typeSDLString,
     resolve: (source, _, context) => {
       const resolvedField =
         source[fieldName] ??
@@ -42,9 +43,7 @@ export const transformListOfUnions = ({ field, fieldName }) => {
       }
 
       return resolvedField.reduce((accumulator, item) => {
-        // @todo use our list of Gatsby node types to do a more performant check
-        // on wether this is a Gatsby node or not.
-        const node = item.id
+        const node = item?.id
           ? context.nodeModel.getNodeById({
               id: item.id,
               type: buildTypeName(item.__typename),
@@ -53,7 +52,7 @@ export const transformListOfUnions = ({ field, fieldName }) => {
 
         if (node) {
           accumulator.push(node)
-        } else if (!item.id) {
+        } else if (item && !item.id) {
           accumulator.push(item)
         }
 
